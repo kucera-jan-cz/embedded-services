@@ -1,0 +1,26 @@
+{
+  "template": "t01*",
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "data": {
+      "properties": {
+        "id" : {
+          "type": "integer"
+        },
+        "A": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "B": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "C" : {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
