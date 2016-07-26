@@ -18,13 +18,16 @@
 		<commons-io.version>2.4</commons-io.version>
 		<testng.version></testng.version>
 		<elasticsearch.version>2.1.1</elasticsearch.version>
+		<zookeeper.version>3.4.8</zookeeper.version>
 		<jackson.version>2.6.2</jackson.version>
 		<config.version>1.2.1</config.version>
+		<curator.version>2.11.0</curator.version>
 	</properties>
 
 	<modules>
 		<module>utils</module>
 		<module>elasticsearch</module>
+		<module>zookeeper</module>
 	</modules>
 
 	<dependencies>
