@@ -10,4 +10,6 @@ public interface EmbeddedZookeeper {
     public void awaitTermination(long timeout, TimeUnit unit);
 
     public void awaitTermination();
+
+    public void deleteAll();
 }

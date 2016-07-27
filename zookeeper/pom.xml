@@ -28,6 +28,11 @@
 			<artifactId>zookeeper</artifactId>
 			<version>${zookeeper.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.scalatest</groupId>
+			<artifactId>scalatest_${scala.binary}</artifactId>
+			<version>${scalatest.version}</version>
+		</dependency>
 		<!-- Testing dependencies -->
 		<!-- ==================== -->
 		<dependency>
