@@ -10,10 +10,20 @@
 	<name>${project.artifactId}</name>
 	<dependencies>
 		<dependency>
+			<groupId>com.github.kucera-jan-cz.embedded</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_${scala.binary}</artifactId>
 			<version>0.9.0.1</version>
 		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>net.cakesolutions</groupId>-->
+		<!--<artifactId>scala-kafka-client</artifactId>-->
+		<!--<version>0.9.0.0</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.scalatest</groupId>
 			<artifactId>scalatest_${scala.binary}</artifactId>
@@ -29,11 +39,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
-		</dependency>
+		<!--<dependency>-->
+		<!--<groupId>ch.qos.logback</groupId>-->
+		<!--<artifactId>logback-classic</artifactId>-->
+		<!--<version>1.1.2</version>-->
+		<!--</dependency>-->
 		<!-- Testing dependencies -->
 		<!-- ==================== -->
 		<dependency>
