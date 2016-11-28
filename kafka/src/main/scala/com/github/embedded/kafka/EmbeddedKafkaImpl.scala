@@ -4,9 +4,10 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 import com.typesafe.config.Config
-import kafka.producer.{Producer, ProducerConfig}
 import kafka.server.{KafkaConfig, KafkaServer}
-import org.apache.kafka.clients.consumer.{Consumer, KafkaConsumer}
+import org.apache.kafka.clients.consumer.{Consumer, ConsumerConfig, KafkaConsumer}
+import org.apache.kafka.clients.producer.{KafkaProducer, Producer, ProducerConfig}
+import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,30 +37,26 @@ class EmbeddedKafkaImpl(zkConnection: String, config: Config) extends EmbeddedKa
     Future(shutdown())
   }
 
-  def getProducer[K, V](): Producer[K, V] = {
+  def getProducer[K, V](): Producer[String, String] = {
     val server = Await.result(serverInit, Duration.Inf)
     logger.debug("Server {}", server.correlationId)
     val props = new Properties()
-    props.put("metadata.broker.list", "0.0.0.0:9092")
-    props.put("serializer.class", "kafka.serializer.StringEncoder")
-    props.put("enable.auto.commit", "true")
-    props.put("auto.commit.interval.ms", "100")
-    props.put("request.required.acks", "1")
-    val producer = new Producer[K, V](new ProducerConfig(props))
+
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+    props.put(ProducerConfig.ACKS_CONFIG, "1")
+    props.put(ProducerConfig.RETRIES_CONFIG, "1")
+    val producer = new KafkaProducer[String, String](props, new StringSerializer, new StringSerializer)
     producer
   }
 
-  def getConsumer[K, V](): Consumer[K, V] = {
+  def getConsumer[K, V](): Consumer[String, String] = {
     Await.ready(serverInit, Duration.Inf)
     val props = new Properties()
-    props.put("bootstrap.servers", "0.0.0.0:9092")
+    props.put("bootstrap.servers", "localhost:9092")
     props.put("group.id", "test")
-    props.put("enable.auto.commit", "false")
-    props.put("auto.commit.interval.ms", "1000")
-    props.put("session.timeout.ms", "30000")
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-    val consumer = new KafkaConsumer[K, V](props)
+    props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "10")
+    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true")
+    val consumer = new KafkaConsumer[String, String](props, new StringDeserializer, new StringDeserializer)
     consumer
   }
 
@@ -72,6 +69,16 @@ class EmbeddedKafkaImpl(zkConnection: String, config: Config) extends EmbeddedKa
     logger.info("Starting Embedded Kafka server...")
     val kafkaProps = new Properties()
     kafkaProps.put(KafkaConfig.ZkConnectProp, zkConnection)
+    kafkaProps.put(KafkaConfig.HostNameProp, "127.0.0.1")
+    kafkaProps.put(KafkaConfig.AdvertisedHostNameProp, "127.0.0.1")
+    kafkaProps.put(KafkaConfig.LogDirProp, "c:\\temp\\kafka")
+    kafkaProps.put(KafkaConfig.BrokerIdProp, "0")
+    kafkaProps.put(KafkaConfig.LogFlushSchedulerIntervalMsProp, "1")
+    kafkaProps.put(KafkaConfig.NumPartitionsProp, "1")
+    kafkaProps.put(KafkaConfig.AutoCreateTopicsEnableProp, "true")
+    kafkaProps.put(KafkaConfig.PortProp, "9092")
+    kafkaProps.put(KafkaConfig.LogFlushIntervalMsProp, "1000")
+    kafkaProps.put(KafkaConfig.AutoLeaderRebalanceEnableProp, "true")
     val kafkaConfig = new KafkaConfig(kafkaProps)
     val kafkaServer = new KafkaServer(kafkaConfig)
     kafkaServer.startup()

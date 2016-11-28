@@ -13,11 +13,22 @@
 			<groupId>com.github.kucera-jan-cz.embedded</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_${scala.binary}</artifactId>
 			<version>0.9.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<!--<dependency>-->
 		<!--<groupId>net.cakesolutions</groupId>-->

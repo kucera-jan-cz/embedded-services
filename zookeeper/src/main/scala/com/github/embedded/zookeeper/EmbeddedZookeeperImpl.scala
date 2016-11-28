@@ -23,8 +23,8 @@ class EmbeddedZookeeperImpl(config: Config) extends EmbeddedZookeeper {
 
   override def getConnectionString(): String = {
     val server = getServer()
-    val address = server.config.getClientPortAddress
-    s"${address.getAddress.getHostAddress}:${address.getPort}"
+    val address = server.factory.getLocalAddress.getHostString
+    s"${address}:${server.zkServer.getClientPort}"
   }
 
   override def shutdown(): Unit = {
@@ -69,15 +69,20 @@ class EmbeddedZookeeperImpl(config: Config) extends EmbeddedZookeeper {
 
   private def initCluster(): ZooKeeperServerLocal = {
     logger.info("Starting Embedded ZooKeeper server ")
-    val quorumConfig = new QuorumPeerConfig
-    val properties = toProperties(config)
-    val dataDir = createTempZookeeperDirectory("target/zk-data", "zk")
-    properties.put("dataDir", dataDir.resolve("data").toFile.toString)
-    properties.put("dataLogDir", dataDir.resolve("logs").toFile.toString)
-    quorumConfig.parseProperties(properties)
-    val serverConfig = new ServerConfig
-    serverConfig.readFrom(quorumConfig)
-    val server = new ZooKeeperServerLocal(serverConfig)
+//    val quorumConfig = new QuorumPeerConfig
+//    val properties = toProperties(config)
+//    val dataDir = createTempZookeeperDirectory("target/zk-data", "zk")
+//    properties.put("dataDir", dataDir.resolve("data").toFile.toString)
+//    properties.put("dataLogDir", dataDir.resolve("logs").toFile.toString)
+//    quorumConfig.parseProperties(properties)
+//    quorumConfig.getClientPortAddress
+//    val serverConfig = new ServerConfig
+//    serverConfig.readFrom(quorumConfig)
+//    val logDir = createTempZookeeperDirectory("target/zk-data", "zk")
+//    val snapDir = createTempZookeeperDirectory("target/zk-data", "snap")
+    val logDir = Paths.get("/temp/zookeeper/logs")
+    val snapDir = Paths.get("/temp/zookeeper/snap")
+    val server = new ZooKeeperServerLocal(logDir.toFile, snapDir.toFile, 2181)
     server.startUp()
     server
   }

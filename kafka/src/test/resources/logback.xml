@@ -9,6 +9,7 @@
     </appender>
 
     <logger name="com.github.embedded.kafka" level="DEBUG"/>
+    <logger name="com.github.embedded.zookeeper" level="DEBUG"/>
     <logger name="kafka" level="DEBUG"/>
 
     <root level="WARN">
